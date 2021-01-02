@@ -1,0 +1,25 @@
+* Project Structure
+
+** Frontend
+   Frontend consists of:
+   - =General Interface= - *Frontend.hs* file.
+   - =General Lexer= - *Frontend/Lexer.hs* file.
+     The word =General= in =General Lexer= means, that it consists of general definitions which would be
+     used across project. For example, we don't need specific lexer tokens for every language we implement.
+     As all languages defined using BNF form, we could implement lexer for BNF language and define specific lexers,
+     that would convert target source code to BNF form, which would be used by our =General Lexer=
+   - =Target Syntax Checker= - *Frontend/[language_name]/Syntax.hs* file.
+     As every language has it's own syntatic rules, it falls on target Frontend implementation to check if syntax holds.
+   - =Target Language Implementations= - which resides in *Frontend/[language_name]* folder.
+     Uses =General Lexer= types to convert source code to lexems, which than are checked for correct syntax, by =Target
+     Syntax Checker=. Afterwards it is checked for correct semantics and converted into *Core Language*.
+
+
+** Core
+   This module do code optimizations, sanity checks, maybe additional semantic checks and builds final *AST*.
+
+** Backend
+   Consumes *AST* from *Core* module and generate target platform code.
+
+** Compiler
+   This module exposes high-level API for the compiler, like ~compile :: Text -> ByteString~ function.
