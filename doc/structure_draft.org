@@ -1,0 +1,82 @@
+* Compiler Structure
+
+** Basic idea
+
+   *[[Backend][backend]]*  -- =translates= *[[Core Language][Core Language]]* =into the target byte-code=
+       |
+    *core*    -- =general represantational language=
+       |
+   *[[Frontend][frontend]]* -- =translates target language into the= *[[Core Language][Core Language]]*
+
+*** Backend
+    Backend is the part of the compiler which translates *[[Core Language][Core Language]]* into the target platform
+    byte-code(x64, x32, arm, jvm, etc.).
+    
+*** Core Language
+    *Core Language* is a hardware-independent language which is used to represent different frontend-languages
+    in unified format.
+    
+*** Frontend
+    Frontend is a part of a compiler which translates target language (brainfuck, lisp, python, etc.)
+    into *[[Core Language][Core Language]]*.
+
+** Core Language Specification
+   The *Core Language* is a _strongly typed_ _general-oriented_ language with _reduced set of instructions_:
+   - _Strongly typed_ means, that all language terms have a compilation-time known type.
+   - _General-oriented_ means, that instructions set allows to emulate a wide range of target languages,
+     ranging from procedural to OOP languages.
+   - _Reduced set of instructions_ means, that the language consists from a small amount of essential instructions,
+     which is just enough, to emulate basic operation and abstract more complex operations using these basic operations.
+
+*** Types
+    The *Core Language* consists of a set of basic types, modeled after *C programming language* types and a few additions,
+    namely:
+    - Product type - equivalent of struct from *C*. It's a type with single constructor that can have many fields,
+      for example in *Haskell*:
+       #+begin_src haskell
+         data ProductType = ProductConstructor Int Int
+       #+end_src
+       or, in *C*
+       #+begin_src c
+         struct ProductType {
+         int field1;
+         int field2;
+         };
+       #+end_src
+    - Union type - tagged union, for example in *Haskell*:
+       #+begin_src haskell
+         data UnionType = Constructor1 Int | Constructor2 String
+       #+end_src
+       or, in *C*
+        #+begin_src c
+          struct Constructor1 {
+            int identity; // field that resides in all union alternatives, which is used to indicate wich constructor
+                          // is now in use.
+            int field;
+          };
+          struct Constructor2 {
+            int identity;
+            char* field;
+          };
+          union UnionType {
+            struct Constructor1 constr1;
+            struct Constructor2 constr2;
+          }
+        #+end_src
+    - Primitive machine types:
+      * integer - fixed-precision integral type.
+      * float - fixed-precision floating-point type.
+      * array - continious array of memory of defined type.
+      * pointer - *C*-like pointer to some part of memory.
+    - More..?
+
+*** Operators
+    The *Core Language* consists of a set of operations, which includes:
+    - Type declaration - operator to define new type.
+    - Type specification - operator used to explicitly specify the type of an expression.
+    - Function declaration - operator used to define new function.
+    - Function application - operator used to define function application to its arguments.
+    - Variable declaration - operator used to declare a variable with specified type and value.
+    - Match declaration - operator used to define pattern-match control structure.
+    - Loop declaration - operator used to declare a general _while_ loop.
+    - More..?
